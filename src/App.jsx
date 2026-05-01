@@ -12,10 +12,10 @@ const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 const CORE_DECKS = [
   { id:"phases", title:"Turn Structure", icon:"⏱",
     cards:[
-      { f:"How many phases are in one player's turn?", b:"6 phases, in order:\n1. Command\n2. Movement\n3. Shooting\n4. Charge\n5. Fight\n6. (End — some abilities trigger here)" },
+      { f:"How many phases are in one player's turn?", b:"5 phases, in order:\n1. Command\n2. Movement\n3. Shooting\n4. Charge\n5. Fight\n\nThere is no separate Morale phase — Battle-shock is handled in the Command phase." },
       { f:"Both players gain CP at the start of which phase?", b:"The Command phase. Both players gain 1 CP at the very start of each Command phase, before anything else is resolved." },
       { f:"When are Battle-shock tests taken?", b:"During the Battle-shock step of the Command phase — the second step, after CP is gained and other Command phase abilities are resolved." },
-      { f:"What is a Battle Round vs a player Turn?", b:"A Battle Round consists of both players taking their turn. Each player's turn has 6 phases. The same player goes first every battle round." },
+      { f:"What is a Battle Round vs a player Turn?", b:"A Battle Round consists of both players taking their turn. Each player's turn has 5 phases. The same player goes first every battle round." },
     ]},
   { id:"movement", title:"Movement Phase", icon:"👟",
     cards:[
@@ -45,7 +45,7 @@ const CORE_DECKS = [
   { id:"morale", title:"Battle-shock", icon:"😨",
     cards:[
       { f:"What triggers a Battle-shock test?", b:"A unit must test if it has lost more than half its starting number of models (for multi-model units), or if a single model has fewer than half its starting wounds remaining." },
-      { f:"How do you pass a Battle-shock test?", b:"Roll 2D6. If the result is equal to or less than the unit's Leadership (Ld) value, the test is passed. Higher Ld is better (e.g. Ld 6+ means you need 2D6 ≤ 6 to pass — roughly 72% chance)." },
+      { f:"How do you pass a Battle-shock test?", b:"Roll 2D6. If the result is equal to or greater than the unit's Leadership (Ld) value, the test is passed. If the result is lower than Ld, the test fails.\n\nExample: Ld 7+ means roll 2D6 and get 7 or higher to pass — roughly a 58% chance.\n\nNote: Higher Ld numbers are HARDER to meet — Ld 8+ is harder to pass than Ld 6+." },
       { f:"What happens to a Battle-shocked unit?", b:"• OC drops to 0 — cannot contest objectives\n• Cannot benefit from friendly Stratagems\n• On a Fall Back move, each model must pass a Desperate Escape test (roll 1D6; on a 1–2 the model is destroyed)\n• Lasts until the next Command phase." },
     ]},
   { id:"objectives", title:"Objectives & Scoring", icon:"🏴",
@@ -56,10 +56,10 @@ const CORE_DECKS = [
     ]},
   { id:"stratagems", title:"Stratagems & CP", icon:"💠",
     cards:[
-      { f:"What are the 6 universal Core Stratagems?", b:"1. Command Re-roll (1CP) — re-roll one die\n2. Counter-offensive (2CP) — fight after an enemy fights\n3. Heroic Intervention (1CP) — Character gains Precision\n4. Insane Bravery (1CP) — auto-pass Battle-shock\n5. Grenade (1CP) — throw a grenade in Shooting\n6. Fire Overwatch (1CP) — shoot during opponent's movement/charge" },
+      { f:"What are the 10 universal Core Stratagems?", b:"Battle Tactic:\n1. Command Re-roll (1CP) — re-roll one die or saving throw\n2. Go to Ground (1CP) — INFANTRY gain 6+ invuln + cover when targeted\n\nEpic Deed:\n3. Insane Bravery (1CP) — auto-pass one Battle-shock test (once per battle)\n4. Epic Challenge (1CP) — one CHARACTER melee attacks gain Precision\n\nStrategic Ploy:\n5. Counter-offensive (2CP) — fight after an enemy unit fights\n6. Fire Overwatch (1CP) — shoot in opponent's Move/Charge (must roll 6 to hit)\n7. Rapid Ingress (1CP) — bring a Reserves unit on at end of opponent's Movement\n8. Heroic Intervention (1CP) — declare a charge against the unit that just charged\n\nWargear:\n9. Grenade (1CP) — roll 6D6, each 4+ = 1 mortal wound on a target within 8\"\n10. Smokescreen (1CP) — SMOKE unit gains cover + Stealth when targeted" },
       { f:"Can the same Stratagem be used more than once per phase?", b:"No. Each Stratagem can only be used once per phase (unless stated otherwise). You can use different Stratagems in the same phase, but not the same one twice." },
       { f:"When are re-rolls applied — before or after modifiers?", b:"Re-rolls are always applied BEFORE modifiers. You re-roll the raw dice result, then apply any +1/-1 modifiers to the new result. You can never re-roll a die more than once." },
-      { f:"What is the Fire Overwatch Stratagem?", b:"Cost: 1CP. Trigger: opponent's Movement or Charge phase. Effect: one of your eligible units shoots as if it were your Shooting phase. Note: 'out of phase' shooting cannot trigger other Shooting phase abilities or Stratagems." },
+      { f:"What is the Fire Overwatch Stratagem?", b:"Cost: 1CP. Timing: opponent's Movement or Charge phase.\n\nEffect: one eligible unit shoots at a visible enemy within 24\".\n\nCRITICAL RULE: Each attack must roll an unmodified 6 to hit — regardless of the weapon's BS or any modifiers. Cannot target TITANIC units. Once per turn only." },
     ]},
   { id:"dice", title:"Dice & Modifiers", icon:"🎲",
     cards:[
@@ -190,9 +190,9 @@ const CORE_QUIZ = [
   {
     tag:"⚠️ COMMON MISTAKE", cat:"Battle-shock",
     q:"You roll 2D6 for a Battle-shock test. The unit's Leadership is 7+. Your roll is 8. What happens?",
-    opts:["Test passed — you rolled 8, which is above 7","Test failed — you needed to roll equal to or under 7, and 8 > 7","Test passed — Leadership 7+ means you pass on 7 or more","Test failed — Ld 7+ means you always fail on a roll of 8+"],
-    correct:1,
-    explanation:"To pass a Battle-shock test, you must roll 2D6 equal to or LESS than the unit's Leadership value. Ld 7+ means you need a result of 7 or lower. A roll of 8 fails the test. The '+' in Leadership refers to the threshold, not rolling above it."
+    opts:["Test passed — 8 equals or exceeds the Leadership value of 7","Test failed — you needed to roll equal to or under 7, and 8 > 7","Test passed — Leadership 7+ means you pass on 7 or more... wait, 8 is more than 7","Test failed — Ld 7+ means you always need exactly 7"],
+    correct:0,
+    explanation:"To pass a Battle-shock test, roll 2D6 and get equal to or ABOVE the unit's Leadership value. Ld 7+ means you need 7 or higher. A roll of 8 passes — 8 ≥ 7. Many players wrongly think you need to roll UNDER Leadership, like old editions."
   },
   // ── STRATAGEMS & SEQUENCING ─────────────────────────────────────────
   {
@@ -249,11 +249,30 @@ const FACTIONS = {
         ]},
     ],
     units:[
-      { name:"Battle Sister Squad", role:"Troops", stats:{M:"6\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:2}, wpn:{name:"Boltgun",A:2,BS:"3+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Order Convictions"], keywords:["Infantry","Battle Sisters"] },
+      // Characters
+      { name:"Canoness", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:4,Ld:"7+",OC:1}, wpn:{name:"Hallowed Chainsword",A:5,BS:"2+",S:3,AP:-1,D:1}, abilities:["Acts of Faith","Sacred Command","The Emperor's Grace"], keywords:["Infantry","Character","Canoness"] },
+      { name:"Morvenn Vahl", role:"Epic Hero", stats:{M:"6\"",T:4,Sv:"2+",W:8,Ld:"5+",OC:1}, wpn:{name:"Lance of Illumination",A:3,BS:"2+",S:8,AP:-3,D:"D6"}, abilities:["Acts of Faith","Abbess Sanctorum","Warlord"], keywords:["Infantry","Character","Epic Hero","Morvenn Vahl"] },
+      { name:"Saint Celestine", role:"Epic Hero", stats:{M:"12\"",T:3,Sv:"3+",W:6,Ld:"5+",OC:1}, wpn:{name:"Ardent Blade",A:6,BS:"2+",S:6,AP:-3,D:2}, abilities:["Acts of Faith","Miraculous Intervention","Saintly Aura"], keywords:["Infantry","Character","Epic Hero","Jump Pack","Saint Celestine"] },
+      { name:"Palatine", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:4,Ld:"7+",OC:1}, wpn:{name:"Bolt Pistol",A:1,BS:"2+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Rapturous Blows","Lead the Righteous"], keywords:["Infantry","Character","Palatine"] },
+      { name:"Dialogus", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:3,Ld:"6+",OC:1}, wpn:{name:"Staff of the Ecclesiarchy",A:3,BS:"4+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Laud Hailer","Stirring Rhetoric"], keywords:["Infantry","Character","Dialogus"] },
+      { name:"Hospitaller", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:3,Ld:"6+",OC:1}, wpn:{name:"Chirurgeon's Tools",A:3,BS:"4+",S:3,AP:0,D:1}, abilities:["Acts of Faith","Healing Hands","Martyr's Vigil"], keywords:["Infantry","Character","Hospitaller"] },
+      { name:"Dogmata", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:4,Ld:"5+",OC:1}, wpn:{name:"Mace of the Righteous",A:4,BS:"2+",S:5,AP:-1,D:2}, abilities:["Acts of Faith","Chorus of Spiritual Fortitude","Invigorating Litanies"], keywords:["Infantry","Character","Dogmata"] },
+      { name:"Imagifier", role:"Character", stats:{M:"6\"",T:3,Sv:"3+",W:3,Ld:"6+",OC:1}, wpn:{name:"Litanies of Faith",A:3,BS:"4+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Tale of the Faithful"], keywords:["Infantry","Character","Imagifier"] },
+      // Battleline
+      { name:"Battle Sister Squad", role:"Battleline", stats:{M:"6\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:2}, wpn:{name:"Boltgun",A:2,BS:"3+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Order Convictions"], keywords:["Infantry","Battleline","Battle Sisters"] },
+      // Other
       { name:"Seraphim Squad", role:"Fast Attack", stats:{M:"12\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:1}, wpn:{name:"Bolt Pistol ×2",A:2,BS:"3+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Angelic Descent"], keywords:["Infantry","Jump Pack","Seraphim"] },
-      { name:"Celestian Sacresant", role:"Elites", stats:{M:"6\"",T:3,Sv:"2+",W:2,Ld:"6+",OC:1}, wpn:{name:"Hallowed Mace",A:3,BS:"3+",S:5,AP:-1,D:1}, abilities:["Acts of Faith","Sworn Protectors"], keywords:["Infantry","Celestian Sacresants"] },
-      { name:"Exorcist", role:"Heavy Support", stats:{M:"10\"",T:9,Sv:"3+",W:11,Ld:"6+",OC:3}, wpn:{name:"Exorcist Missile Launcher",A:"2D6",BS:"3+",S:8,AP:-2,D:"D6"}, abilities:["Acts of Faith","Grinding Advance"], keywords:["Vehicle","Exorcist"] },
-      { name:"Canoness", role:"HQ", stats:{M:"6\"",T:3,Sv:"2+",W:4,Ld:"5+",OC:1}, wpn:{name:"Condemnor Boltgun",A:2,BS:"2+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Lead the Righteous","Independent Character"], keywords:["Infantry","Character","Canoness"] },
+      { name:"Zephyrim Squad", role:"Fast Attack", stats:{M:"12\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:1}, wpn:{name:"Power Sword",A:3,BS:"3+",S:4,AP:-2,D:1}, abilities:["Acts of Faith","Swooping Assault"], keywords:["Infantry","Jump Pack","Zephyrim"] },
+      { name:"Celestian Sacresants", role:"Elites", stats:{M:"6\"",T:3,Sv:"3+",W:2,Ld:"6+",OC:1}, wpn:{name:"Hallowed Mace",A:3,BS:"3+",S:5,AP:-1,D:1}, abilities:["Acts of Faith","Sworn Protectors"], keywords:["Infantry","Celestian Sacresants"] },
+      { name:"Repentia Squad", role:"Elites", stats:{M:"7\"",T:3,Sv:"6+",W:2,Ld:"8+",OC:1}, wpn:{name:"Penitent Eviscerator",A:4,BS:"3+",S:6,AP:-2,D:2}, abilities:["Acts of Faith","Zealot","Penitent Blows"], keywords:["Infantry","Repentia"] },
+      { name:"Arco-flagellants", role:"Elites", stats:{M:"7\"",T:3,Sv:"6+",W:2,Ld:"9+",OC:1}, wpn:{name:"Arco-flails",A:5,BS:"4+",S:5,AP:-1,D:1}, abilities:["Acts of Faith","Arco-frenzy","Mindlock"], keywords:["Infantry","Arco-flagellants"] },
+      { name:"Dominion Squad", role:"Elites", stats:{M:"6\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:2}, wpn:{name:"Boltgun",A:2,BS:"3+",S:4,AP:0,D:1}, abilities:["Acts of Faith","Vanguard"], keywords:["Infantry","Dominion"] },
+      { name:"Retributor Squad", role:"Heavy Support", stats:{M:"6\"",T:3,Sv:"3+",W:1,Ld:"6+",OC:2}, wpn:{name:"Multi-melta",A:2,BS:"3+",S:9,AP:-4,D:"D6"}, abilities:["Acts of Faith","Endless Crusade"], keywords:["Infantry","Retributors"] },
+      { name:"Exorcist", role:"Heavy Support", stats:{M:"10\"",T:9,Sv:"3+",W:11,Ld:"7+",OC:3}, wpn:{name:"Exorcist Missile Launcher",A:"D6+3",BS:"3+",S:8,AP:-2,D:"D6"}, abilities:["Acts of Faith","Grinding Advance"], keywords:["Vehicle","Exorcist"] },
+      { name:"Castigator", role:"Heavy Support", stats:{M:"10\"",T:10,Sv:"3+",W:13,Ld:"7+",OC:3}, wpn:{name:"Castigator Bolt Cannon",A:18,BS:"3+",S:5,AP:-1,D:1}, abilities:["Acts of Faith","Grinding Advance","Deadly Demise D3"], keywords:["Vehicle","Castigator"] },
+      { name:"Penitent Engines", role:"Fast Attack", stats:{M:"9\"",T:6,Sv:"4+",W:5,Ld:"8+",OC:2}, wpn:{name:"Penitent Buzz-blade",A:4,BS:"3+",S:6,AP:-3,D:2}, abilities:["Acts of Faith","Vessel of Redemption","Frenzied Rampage"], keywords:["Vehicle","Walker","Penitent Engines"] },
+      { name:"Mortifiers", role:"Heavy Support", stats:{M:"9\"",T:6,Sv:"4+",W:5,Ld:"8+",OC:2}, wpn:{name:"Penitent Buzz-blade",A:4,BS:"3+",S:6,AP:-3,D:2}, abilities:["Acts of Faith","Mortified Anguish"], keywords:["Vehicle","Walker","Mortifiers"] },
+      { name:"Paragon Warsuits", role:"Elites", stats:{M:"8\"",T:6,Sv:"2+",W:4,Ld:"6+",OC:2}, wpn:{name:"Multi-melta",A:2,BS:"2+",S:9,AP:-4,D:"D6"}, abilities:["Acts of Faith","Paragons of Faith"], keywords:["Vehicle","Walker","Paragon Warsuits"] },
     ]},
   orks:{
     name:"Orks", short:"Orks", icon:"💀",
@@ -274,11 +293,26 @@ const FACTIONS = {
         ]},
     ],
     units:[
-      { name:"Boyz", role:"Troops", stats:{M:"5\"",T:5,Sv:"6+",W:1,Ld:"8+",OC:2}, wpn:{name:"Choppa",A:2,BS:"5+",S:4,AP:-1,D:1}, abilities:["'Ere We Go","Mob Rule"], keywords:["Infantry","Ork","Boyz"] },
-      { name:"Nobz", role:"Elites", stats:{M:"5\"",T:5,Sv:"4+",W:3,Ld:"7+",OC:1}, wpn:{name:"Power Klaw",A:3,BS:"5+",S:8,AP:-2,D:2}, abilities:["'Ere We Go","Nobz"], keywords:["Infantry","Ork","Nobz"] },
-      { name:"Warboss", role:"HQ", stats:{M:"5\"",T:6,Sv:"3+",W:6,Ld:"6+",OC:1}, wpn:{name:"Kustom Shoota",A:4,BS:"5+",S:4,AP:0,D:1}, abilities:["'Ere We Go","Waaagh! Leader","Independent Character"], keywords:["Infantry","Character","Warboss"] },
-      { name:"Deff Dread", role:"Heavy Support", stats:{M:"6\"",T:8,Sv:"3+",W:8,Ld:"7+",OC:3}, wpn:{name:"Dread Klaw",A:4,BS:"5+",S:10,AP:-2,D:3}, abilities:["'Ere We Go","Deff Dread"], keywords:["Vehicle","Walker","Deff Dread"] },
-      { name:"Stormboyz", role:"Fast Attack", stats:{M:"12\"",T:5,Sv:"6+",W:1,Ld:"8+",OC:1}, wpn:{name:"Slugga",A:1,BS:"5+",S:4,AP:0,D:1}, abilities:["'Ere We Go","Aerial Assault"], keywords:["Infantry","Jump Pack","Stormboyz"] },
+      // Characters
+      { name:"Warboss", role:"Character", stats:{M:"5\"",T:6,Sv:"3+",W:6,Ld:"6+",OC:1}, wpn:{name:"Kustom Shoota",A:4,BS:"5+",S:4,AP:0,D:1}, abilities:["Waaagh!","Brutal but Kunnin","'Ere We Go"], keywords:["Infantry","Character","Warboss"] },
+      { name:"Ghazghkull Thraka", role:"Epic Hero", stats:{M:"6\"",T:9,Sv:"2+",W:12,Ld:"5+",OC:5}, wpn:{name:"Gork's Klaw",A:5,BS:"3+",S:14,AP:-4,D:"D6+2"}, abilities:["Waaagh!","Prophet of Da Great Waaagh!","I Am Da Greatest"], keywords:["Infantry","Character","Epic Hero","Warboss","Ghazghkull Thraka"] },
+      { name:"Big Mek with Shokk Attack Gun", role:"Character", stats:{M:"5\"",T:5,Sv:"4+",W:5,Ld:"7+",OC:1}, wpn:{name:"Shokk Attack Gun",A:"D3+3",BS:"5+",S:"2D6",AP:-5,D:"D6"}, abilities:["Waaagh!","Mekboy","Mekaniak"], keywords:["Infantry","Character","Big Mek"] },
+      { name:"Warboss on Warbike", role:"Character", stats:{M:"14\"",T:7,Sv:"4+",W:7,Ld:"6+",OC:2}, wpn:{name:"Dakkaguns",A:4,BS:"5+",S:5,AP:0,D:1}, abilities:["Waaagh!","Full Throttle","Brutal but Kunnin"], keywords:["Mounted","Character","Warboss"] },
+      { name:"Weirdboy", role:"Character", stats:{M:"5\"",T:5,Sv:"6+",W:4,Ld:"8+",OC:1}, wpn:{name:"Weirdboy Staff",A:3,BS:"5+",S:6,AP:-1,D:2}, abilities:["Waaagh!","Psyker","Da Jump"], keywords:["Infantry","Character","Psyker","Weirdboy"] },
+      // Battleline
+      { name:"Boyz", role:"Battleline", stats:{M:"5\"",T:5,Sv:"6+",W:1,Ld:"8+",OC:2}, wpn:{name:"Choppa",A:2,BS:"5+",S:4,AP:-1,D:1}, abilities:["Waaagh!","'Ere We Go","Mob Rule"], keywords:["Infantry","Battleline","Mob","Boyz"] },
+      { name:"Gretchin", role:"Battleline", stats:{M:"5\"",T:2,Sv:"6+",W:1,Ld:"9+",OC:1}, wpn:{name:"Grot Blasta",A:1,BS:"5+",S:3,AP:0,D:1}, abilities:["Waaagh!","Grots"], keywords:["Infantry","Battleline","Grots","Gretchin"] },
+      // Other
+      { name:"Nobz", role:"Elites", stats:{M:"5\"",T:5,Sv:"4+",W:3,Ld:"7+",OC:1}, wpn:{name:"Power Klaw",A:3,BS:"5+",S:8,AP:-2,D:2}, abilities:["Waaagh!","'Ere We Go","Nobz"], keywords:["Infantry","Mob","Nobz"] },
+      { name:"Megaboss Nobz", role:"Elites", stats:{M:"5\"",T:6,Sv:"2+",W:3,Ld:"7+",OC:1}, wpn:{name:"Power Klaw",A:3,BS:"5+",S:8,AP:-2,D:2}, abilities:["Waaagh!","'Ere We Go","Meganobz"], keywords:["Infantry","Mob","Meganobz"] },
+      { name:"Kommandos", role:"Elites", stats:{M:"6\"",T:5,Sv:"6+",W:2,Ld:"8+",OC:2}, wpn:{name:"Choppa",A:2,BS:"3+",S:4,AP:-1,D:1}, abilities:["Waaagh!","Infiltrators","Sneaky Gits"], keywords:["Infantry","Kommandos"] },
+      { name:"Stormboyz", role:"Fast Attack", stats:{M:"12\"",T:5,Sv:"6+",W:1,Ld:"8+",OC:1}, wpn:{name:"Slugga",A:1,BS:"5+",S:4,AP:0,D:1}, abilities:["Waaagh!","'Ere We Go","Aerial Assault"], keywords:["Infantry","Jump Pack","Stormboyz"] },
+      { name:"Warbikers", role:"Fast Attack", stats:{M:"14\"",T:6,Sv:"4+",W:2,Ld:"8+",OC:2}, wpn:{name:"Dakkaguns",A:2,BS:"5+",S:5,AP:0,D:1}, abilities:["Waaagh!","'Ere We Go","Drive-by Dakka"], keywords:["Mounted","Mob","Warbikers"] },
+      { name:"Beast Snagga Boyz", role:"Fast Attack", stats:{M:"6\"",T:5,Sv:"6+",W:2,Ld:"8+",OC:2}, wpn:{name:"Power Snappa",A:2,BS:"5+",S:7,AP:-1,D:1}, abilities:["Waaagh!","'Ere We Go","Dat One's Even Bigga!"], keywords:["Infantry","Mob","Beast Snagga Boyz"] },
+      { name:"Deff Dread", role:"Heavy Support", stats:{M:"6\"",T:8,Sv:"3+",W:8,Ld:"7+",OC:3}, wpn:{name:"Dread Klaw",A:4,BS:"5+",S:10,AP:-2,D:3}, abilities:["Waaagh!","'Ere We Go","Deadly Demise D3"], keywords:["Vehicle","Walker","Deff Dread"] },
+      { name:"Mek Gunz", role:"Heavy Support", stats:{M:"3\"",T:5,Sv:"4+",W:4,Ld:"8+",OC:2}, wpn:{name:"Kustom Mega-kannon",A:"D3",BS:"5+",S:8,AP:-3,D:"D3+3"}, abilities:["Waaagh!","Krew-served"], keywords:["Infantry","Mek Gunz"] },
+      { name:"Battlewagon", role:"Transport", stats:{M:"10\"",T:10,Sv:"3+",W:13,Ld:"7+",OC:4}, wpn:{name:"Deff Rolla",A:4,BS:"5+",S:9,AP:-1,D:2}, abilities:["Waaagh!","Ramming Speed","Transport"], keywords:["Vehicle","Transport","Battlewagon"] },
+      { name:"Trukk", role:"Transport", stats:{M:"12\"",T:8,Sv:"4+",W:8,Ld:"8+",OC:2}, wpn:{name:"Big Shoota",A:3,BS:"5+",S:5,AP:0,D:1}, abilities:["Waaagh!","Ramshackle","Transport"], keywords:["Vehicle","Transport","Trukk"] },
     ]},
   necrons:{
     name:"Necrons", short:"Necrons", icon:"☠️",
@@ -893,12 +927,12 @@ const MODIFIERS = [
     name: "Devastating Wounds",
     icon: "💥",
     color: "#dc143c",
-    oneliner: "Critical wounds deal mortal wounds equal to the weapon's damage — and the normal wound is ignored.",
-    description: "Each time an attack with this ability scores a Critical Wound (unmodified 6 to wound), that attack inflicts a number of mortal wounds equal to the weapon's Damage characteristic and the attack sequence ends — no saving throw is made.",
+    oneliner: "Critical wounds bypass ALL saves — but the defender still rolls Feel No Pain.",
+    description: "Each time an attack with this ability scores a Critical Wound (unmodified 6 to wound), no saving throw of any kind can be made against that attack — including invulnerable saves. The attack then inflicts mortal wounds equal to the weapon's Damage characteristic. Importantly, Feel No Pain saves CAN still be used against these mortal wounds.",
     category: "Wound Modifier",
-    synergies: ["High Damage weapons — a Damage 6 weapon with Devastating Wounds can delete a model in one critical wound","Re-roll wound abilities — more wound rolls = more chances for that 6","Lethal Hits — auto-wounding on critical hits creates more wound roll opportunities, increasing chances of Devastating Wound procs"],
-    antiSynergies: ["Low Damage weapons (D1) — Devastating Wounds on a D1 weapon only inflicts 1 mortal wound on a 6, which is the same as a normal unsaved wound","Invulnerable saves — irrelevant, since Devastating Wounds bypasses all saves"],
-    didYouKnow: "Devastating Wounds completely bypasses invulnerable saves and Feel No Pain. The mortal wounds go straight through — making it uniquely powerful against heavily-protected targets like Daemons.",
+    synergies: ["High Damage weapons — a Damage 6 weapon with Devastating Wounds dealing 6 mortal wounds is devastating","Re-roll wound abilities — more wound roll attempts mean more chances to roll that 6","Lethal Hits — auto-wounding on critical hits creates more wound rolls, increasing Devastating Wounds procs","Precision — if the weapon also has Precision, the mortal wounds can be allocated to a Character"],
+    antiSynergies: ["Feel No Pain — unlike invulnerable saves, FNP still works against Devastating Wounds mortal wounds","Low Damage (D1) weapons — Devastating Wounds on a D1 weapon only deals 1 mortal wound on a 6, same as a normal unsaved wound","Multiple instances don't stack — if a weapon somehow had Devastating Wounds twice, only one instance applies"],
+    didYouKnow: "Devastating Wounds bypasses armour AND invulnerable saves — but the defender STILL rolls Feel No Pain. Many players assume FNP is also bypassed. It is not. A Daemon with 4+ FNP still rolls against every mortal wound from Devastating Wounds.",
   },
   {
     name: "Torrent",
@@ -926,12 +960,12 @@ const MODIFIERS = [
     name: "Blast",
     icon: "💣",
     color: "#f0a020",
-    oneliner: "Minimum 3 shots against units of 6+ models; always fires maximum shots against 11+ models.",
-    description: "If a Blast weapon targets a unit with 6 or more models, it always makes a minimum of 3 hit rolls, even if the random result is lower. If the target unit has 11 or more models, it always makes the maximum number of hit rolls (e.g. D6 Blast always fires 6 shots against 11+ model units).",
+    oneliner: "Add +1 Attack for every 5 models in the target unit (rounding down).",
+    description: "Each time an attack is made with this weapon, add 1 to the Attacks characteristic for every 5 models in the target unit, rounding down. For example: targeting a 10-model unit gives +2 attacks; targeting a 20-model unit gives +4. This weapon can never target a unit that is within Engagement Range of any units from the attacking model's army.",
     category: "Special Rule",
-    synergies: ["Large unit targets — Blast is designed to punish hordes; always worth shooting at 10-model blobs","D6 or 2D6 shot profiles — the maximum cap is most impactful when the weapon has variable shots","Low AP weapons — blasting a horde with poor saves makes the volume of hits do serious work"],
-    antiSynergies: ["Small elite units — Blast provides no bonus against units of 5 or fewer models","Characters — Blast weapons cannot target Characters unless they are the closest visible enemy"],
-    didYouKnow: "Blast weapons cannot be used to fire at units that are within Engagement Range of friendly units — even if the blast model itself is not in Engagement Range. The restriction applies to the target unit's proximity to friendlies.",
+    synergies: ["Large unit targets — the bonus scales directly with enemy unit size; devastating against 20-model blobs","High base attacks — each bonus attack adds proportionally more value on a high-attack weapon","AP weapons — more attacks landing means AP value converts to more unsaved wounds"],
+    antiSynergies: ["Small elite units (fewer than 5 models) — provides zero bonus since rounding down gives 0","Characters — cannot target Characters unless they are the closest visible enemy unit","Friendly units in combat nearby — cannot fire at all if target is within Engagement Range of any friendly unit"],
+    didYouKnow: "The old 'minimum 3 shots / maximum shots against 11+ models' rule was from a previous version. The current Wahapedia rule is simply +1 Attack per 5 models in the target unit. Check your source — many older guides still have the incorrect version.",
   },
   {
     name: "Indirect Fire",
@@ -977,15 +1011,97 @@ const MODIFIERS = [
     antiSynergies: ["Single-shot low-BS weapons — low probability of rolling a 6 on one die","Units without Characters — Precision is irrelevant if there's no Character to target"],
     didYouKnow: "Precision lets you snipe Characters hiding inside larger units — a key way to remove buffs like Auras or Rites of Battle that protect nearby units. Without Precision, the Character is protected by normal wound allocation.",
   },
+  {
+    name: "Mortal Wounds",
+    icon: "☢️",
+    color: "#cc44aa",
+    oneliner: "Bypasses hit, wound and all save rolls — and spills over between models.",
+    description: "Mortal wounds bypass the entire attack sequence. No hit roll, wound roll, or saving throw of any kind is made against them — armour and invulnerable saves are both bypassed. Only Feel No Pain and abilities that specifically reference mortal wounds can reduce them. Unlike normal damage, mortal wounds CARRY OVER to the next model when they destroy a model. Exception: mortal wounds caused by Devastating Wounds do NOT carry over.",
+    category: "Damage Type",
+    synergies: ["Feel No Pain — the only common save that still works against mortal wounds","Multiple mortal wound sources — stacking abilities that deal mortals can overwhelm FNP-less units","Units without invulnerable saves — mortal wounds bypass all saves equally"],
+    antiSynergies: ["Feel No Pain — significantly reduces the impact on well-protected units","Devastating Wounds mortal wounds — these specifically do NOT carry over, unlike regular mortal wounds"],
+    didYouKnow: "Regular mortal wounds carry over between models — 3 mortal wounds against a 2-wound model kills it, and the leftover 1 passes to the next model. Mortal wounds from Devastating Wounds do NOT carry over — they are lost when the target model is destroyed. This is a key rules distinction.",
+  },
+  {
+    name: "Anti",
+    icon: "🏹",
+    color: "#44ccff",
+    oneliner: "Against a specific keyword target, scores Critical Wounds on a lower value than 6.",
+    description: "Weapons with this keyword specify a target type and threshold value, written as Anti-[KEYWORD] X+ (e.g. Anti-Infantry 4+, Anti-Monster 5+). Each time an attack is made against a unit with the matching keyword, an unmodified wound roll of equal to or greater than the listed value counts as a Critical Wound — even on a 4 or 5. Against other unit types, the weapon wounds at normal Strength vs Toughness values.",
+    category: "Wound Modifier",
+    synergies: ["Devastating Wounds — lowering the Critical Wound threshold massively increases the rate of bypassing all saves against the named target type","Precision — more Critical Wounds means more chances to allocate to a Character with the target keyword","Re-roll wound abilities — more wound rolls means more chances to hit the Anti threshold"],
+    antiSynergies: ["Units without the targeted keyword — the ability has no effect; wound at normal S vs T values","Multiple Anti values don't stack — only one Critical Wound threshold applies per attack"],
+    didYouKnow: "Anti-Infantry 4+ means ANY unmodified wound roll of 4, 5, or 6 counts as a Critical Wound against Infantry — not just 6s. Combined with Devastating Wounds this means 50% of all wound rolls against Infantry bypass every save. Anti-Monster 4+ on a Devastating Wounds weapon is similarly punishing against large targets.",
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// DID YOU KNOW DATA
+// MODIFIER INTERACTIONS QUIZ DATA — Wahapedia verified
 // ═══════════════════════════════════════════════════════════════════════════════
+const MODIFIER_INTERACTIONS = [
+  {
+    tag:"🔧 INTERACTION", cat:"Lethal Hits + Sustained Hits",
+    q:"A weapon has both Lethal Hits and Sustained Hits 1. It scores a Critical Hit. What happens?",
+    opts:["The original attack auto-wounds AND generates 1 bonus hit that also auto-wounds","The original attack auto-wounds AND generates 1 bonus hit — but the bonus hit rolls to wound normally","Only one keyword applies — the controlling player chooses which","The attack auto-wounds only; Sustained Hits is ignored when Lethal Hits applies"],
+    correct:1,
+    explanation:"Both keywords apply on a Critical Hit. Lethal Hits makes the original attack auto-wound. Sustained Hits 1 generates 1 bonus hit. However, that bonus hit is a separate new attack — it rolls to wound normally. It does NOT also auto-wound.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Torrent + Lethal Hits",
+    q:"A Torrent weapon also has Lethal Hits. What does Lethal Hits do when the weapon fires?",
+    opts:["Auto-wounds on every attack since Torrent already ensured the hit","Nothing — Torrent auto-hits with no hit roll, so no Critical Hit can occur","Every attack counts as a Critical Hit since it always hits","Lethal Hits applies to wound rolls instead when combined with Torrent"],
+    correct:1,
+    explanation:"Torrent auto-hits by skipping the hit roll entirely. Lethal Hits triggers on an unmodified hit roll of 6 — a Critical Hit. With no hit roll there can be no Critical Hit. Lethal Hits (and Sustained Hits) are both completely wasted on Torrent weapons.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Devastating Wounds + Feel No Pain",
+    q:"A Devastating Wounds weapon scores a Critical Wound against a model with a 4+ invulnerable save and Feel No Pain 5+. What defences apply?",
+    opts:["Both saves are bypassed — no rolls at all, damage applied directly","The invulnerable save is bypassed, but FNP is still rolled for each mortal wound","Both saves are bypassed, but one FNP roll is made for the whole attack","The invulnerable save applies since no armour save was specified"],
+    correct:1,
+    explanation:"Devastating Wounds bypasses ALL saving throws — both armour and invulnerable. However, Feel No Pain is not a saving throw. The defender still rolls FNP 5+ against each mortal wound inflicted. FNP is the only defence that still applies against Devastating Wounds.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Anti + Devastating Wounds",
+    q:"A weapon with Anti-Infantry 4+ and Devastating Wounds attacks an Infantry unit. The wound roll is 4. What happens?",
+    opts:["A normal wound — a 4 just meets the wound table, not a Critical Wound","Critical Wound — Anti-Infantry 4+ makes any unmodified 4, 5 or 6 a Critical Wound, triggering Devastating Wounds","The 4 meets Anti-Infantry threshold but Devastating Wounds only triggers on a natural 6","The attack auto-wounds but does not trigger Devastating Wounds"],
+    correct:1,
+    explanation:"Anti-Infantry 4+ means unmodified wound rolls of 4, 5, or 6 all count as Critical Wounds against Infantry. Devastating Wounds triggers on Critical Wounds. So a roll of 4 against Infantry bypasses all saves and deals mortal wounds equal to Damage. An extremely powerful combination.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Feel No Pain + Damage",
+    q:"A 3-damage weapon wounds and the armour save is failed. The target has Feel No Pain 5+. How many FNP rolls are made?",
+    opts:["1 roll — one per wound suffered","3 rolls — one per damage point","2 rolls — one for the wound, one for excess damage","1 roll with result halved since the armour save already failed"],
+    correct:1,
+    explanation:"Feel No Pain is rolled once per DAMAGE POINT, not once per wound. 3 damage = 3 separate FNP rolls. Each 5+ ignores that specific damage point independently. This is one of the most commonly misplayed rules in 10th Edition.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Mortal Wounds — Carry Over",
+    q:"Regular mortal wounds deal 3 wounds to a model with only 2 wounds remaining. What happens to the excess 1 mortal wound?",
+    opts:["Lost — mortal wounds are capped at the target model's remaining wounds","It carries over to the next model in the unit","The attacking player chooses which model receives the excess","The unit must take a Battle-shock test instead of receiving the excess"],
+    correct:1,
+    explanation:"Regular mortal wounds DO carry over — excess damage passes to the next model. 3 mortal wounds against a 2-wound model kills it and the remaining 1 is allocated to the next nearest model. IMPORTANT: mortal wounds from Devastating Wounds do NOT carry over — they are lost when the model is destroyed.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Twin-linked + Devastating Wounds",
+    q:"A weapon with Twin-linked and Devastating Wounds rolls a 4 to wound (not a Critical Wound). What does Twin-linked do?",
+    opts:["Nothing — Twin-linked only activates on Critical Wounds","Re-roll is available — Twin-linked lets you re-roll any failed wound roll including non-critical ones","Re-roll only if result was 5 (one short of a 6)","Twin-linked is redundant when Devastating Wounds is on the same weapon"],
+    correct:1,
+    explanation:"Twin-linked lets you re-roll ANY failed wound roll. A non-6 that failed to wound is still a failed wound roll — you can re-roll it. If the re-roll produces a 6, Devastating Wounds then triggers. This makes Twin-linked a useful way to fish for Critical Wounds on Devastating Wounds weapons.",
+  },
+  {
+    tag:"🔧 INTERACTION", cat:"Fire Overwatch hit roll",
+    q:"You use Fire Overwatch (1CP). Your unit has BS3+. What roll is needed to hit?",
+    opts:["3+ — normal BS applies","4+ — a -1 penalty applies during Overwatch","6 — Fire Overwatch requires an unmodified 6 to hit regardless of BS","5+ — Overwatch always uses a fixed 5+ to hit"],
+    correct:2,
+    explanation:"Fire Overwatch has a specific rule: each time a model makes a ranged attack during Overwatch, an unmodified hit roll of 6 is required to score a hit — irrespective of the weapon's BS or any modifiers. This is a critical restriction many players miss.",
+  },
+];
+
+// DID YOU KNOW DATA — Wahapedia verified
 const DID_YOU_KNOW = [
   { icon:"☠️", category:"Lethal Hits", tip:"Lethal Hits does nothing on Torrent weapons. Torrent auto-hits so there's no hit roll — and no hit roll means no critical hit to trigger Lethal Hits. Both rules are completely wasted together." },
   { icon:"💀", category:"Feel No Pain", tip:"FNP is rolled once per damage point, not per wound. A D3-damage weapon that wounds deals up to 3 separate FNP rolls. Failing to roll three times is one of the most common mistakes at the table." },
-  { icon:"💥", category:"Devastating Wounds", tip:"Devastating Wounds completely ignores invulnerable saves AND Feel No Pain. The mortal wounds deal damage directly — making it uniquely powerful against Daemons and other heavily-defended models." },
+  { icon:"💥", category:"Devastating Wounds", tip:"Devastating Wounds bypasses armour saves AND invulnerable saves — but NOT Feel No Pain. The defender still rolls FNP against every mortal wound inflicted. A Daemon with a 4+ FNP is still quite resilient against Devastating Wounds weapons." },
   { icon:"🔁", category:"Re-rolls", tip:"Re-rolls are applied BEFORE modifiers. You re-roll the raw die, then any +1 or -1 applies to the new result. A re-rolled 3 with +1 to hit becomes a 4 — it does not 'un-reroll' if the modified result would have passed." },
   { icon:"🎯", category:"Precision", tip:"Precision lets you allocate Critical Hits to a Character hiding in a unit. Without it, you must allocate wounds to the closest model — so Characters can hide deep in units and be effectively untargetable." },
   { icon:"💣", category:"Blast", tip:"Blast weapons cannot be fired if the target unit is within Engagement Range of ANY friendly unit — not just yours. This catches many players out when allies are locked in combat nearby." },
@@ -1001,6 +1117,11 @@ const DID_YOU_KNOW = [
   { icon:"📋", category:"Deep Strike", tip:"Deep Strike requires more than 9\" horizontally from ALL enemy models — not just the nearest one. That includes enemy units behind you. Always measure to every visible enemy model before placing." },
   { icon:"💠", category:"Stratagems", tip:"The same Stratagem can only be used once per phase — but you can use multiple different Stratagems in the same phase. Read: two different 1CP stratagems in the Shooting phase is fine; the same one twice is not." },
   { icon:"🔄", category:"Sequencing", tip:"When two of YOUR rules trigger simultaneously during your opponent's turn, YOUR OPPONENT decides the order — because it's their turn, making them the active player. This catches a lot of people off guard." },
+  { icon:"☢️", category:"Mortal Wounds", tip:"Regular mortal wounds carry over — 3 mortal wounds against a 2-wound model kills it and the leftover 1 passes to the next model. Mortal wounds from Devastating Wounds do NOT carry over — they are lost when the target model dies." },
+  { icon:"🏹", category:"Anti", tip:"Anti-Infantry 4+ means ANY unmodified wound roll of 4, 5, or 6 counts as a Critical Wound against Infantry. Combined with Devastating Wounds, 50% of wound rolls bypass every save. This is one of the most powerful keyword combinations in the game." },
+  { icon:"⚔️", category:"Battle-shock", tip:"To PASS a Battle-shock test, roll 2D6 and get equal to or ABOVE the unit's Leadership value. Ld 7+ means you need a 7 or higher to pass. Many players wrongly think you roll UNDER Leadership like older editions — the opposite is true in 10th." },
+  { icon:"🔫", category:"Fire Overwatch", tip:"Fire Overwatch hits on 6s ONLY — regardless of the weapon's BS or any modifiers. A BS2+ model using Fire Overwatch still needs an unmodified 6 to hit. This is a hard rule that overrides normal BS entirely." },
+  { icon:"💣", category:"Blast", tip:"The current Blast rule adds +1 Attack per 5 models in the target unit (rounding down). Many players remember an older 'minimum 3 shots / max shots at 11+' version — that rule no longer applies. Always check Wahapedia for the current wording." },
 ];
 
 // Modifier matching quiz — description shown, user picks the keyword name
@@ -1168,10 +1289,11 @@ function CombatPath({ onXP, onBack }) {
   if (mode==="sandbox")   return <DiceSandbox onBack={()=>setMode(null)} />;
   if (mode==="modifiers") return <ModifierMatch onXP={onXP} onBack={()=>setMode(null)} />;
   if (mode==="dyk")       return <DidYouKnow onBack={()=>setMode(null)} />;
-  if (mode==="mistakes")  return <QuizMounted raw={INTERACTION_QS} color="#f0a020" onXP={onXP} onBack={()=>setMode(null)} title="Combat Edge Cases" mistakeFocus />;
+  if (mode==="mistakes")     return <QuizMounted raw={INTERACTION_QS} color="#f0a020" onXP={onXP} onBack={()=>setMode(null)} title="Combat Edge Cases" mistakeFocus />;
+  if (mode==="interactions") return <QuizMounted raw={MODIFIER_INTERACTIONS} color="#f0a020" onXP={onXP} onBack={()=>setMode(null)} title="Modifier Interactions" mistakeFocus />;
 
   if (mode) {
-    const map = { wound:WOUND_QS, save:SAVE_QS, hit:HIT_QS, all:[...WOUND_QS,...SAVE_QS,...HIT_QS,...INTERACTION_QS] };
+    const map = { wound:WOUND_QS, save:SAVE_QS, hit:HIT_QS, all:[...WOUND_QS,...SAVE_QS,...HIT_QS,...INTERACTION_QS,...MODIFIER_INTERACTIONS] };
     const label = { wound:"Wound Rolls", save:"Save & AP", hit:"Hit Probability", all:"Full Combat Quiz" };
     return <QuizMounted raw={map[mode]||[]} color="#ffd700" onXP={onXP} onBack={()=>setMode(null)} title={label[mode]} />;
   }
@@ -1194,7 +1316,8 @@ function CombatPath({ onXP, onBack }) {
       <MenuRow icon="🔧" label="Modifier Match"     sublabel="Read the rule description — name the keyword. Lethal Hits, Torrent, FNP & more" accent="#f0a020" borderCol="#3a2a00" onClick={()=>setMode("modifiers")} />
 
       <div style={{fontSize:10,color:"#f0a020",letterSpacing:2,fontFamily:"'Cinzel',serif",marginBottom:10,marginTop:6}}>EDGE CASES & TIPS</div>
-      <MenuRow icon="⚠️" label="Combat Edge Cases"  sublabel="FNP, damage caps, half-strength, sequencing +30XP" accent="#f0a020" borderCol="#3a2a00" onClick={()=>setMode("mistakes")} />
+      <MenuRow icon="⚠️" label="Combat Edge Cases"   sublabel="FNP, damage caps, half-strength, sequencing +30XP" accent="#f0a020" borderCol="#3a2a00" onClick={()=>setMode("mistakes")} />
+      <MenuRow icon="🔀" label="Modifier Interactions" sublabel={`${MODIFIER_INTERACTIONS.length} questions — how keywords combine and conflict +30XP`} accent="#f0a020" borderCol="#3a2a00" onClick={()=>setMode("interactions")} />
       <MenuRow icon="💡" label="Did You Know?"      sublabel={`${DID_YOU_KNOW.length} tips — synergies, anti-synergies & surprises`} accent="#f0c020" borderCol="#3a3000" onClick={()=>setMode("dyk")} />
 
       <div style={{fontSize:10,color:"#5aaa5a",letterSpacing:2,fontFamily:"'Cinzel',serif",marginBottom:10,marginTop:6}}>REFERENCE</div>
